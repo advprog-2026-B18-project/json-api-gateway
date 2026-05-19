@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           # Notice we are copying the template file, not a static conf
-          source: "docker-compose.yml,nginx.conf.template,.env"
+          source: "docker-compose.yml,default.conf.template,.env"
           target: "/home/ubuntu/"
 
       # Connect to EC2, lock permissions, and deploy

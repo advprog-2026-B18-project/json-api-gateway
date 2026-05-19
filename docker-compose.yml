@@ -6,7 +6,7 @@ services:
       - "80:80"
     volumes:
       # Mount your template file into Nginx's automated template folder
-      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
+      - ./default.conf.template:/etc/nginx/templates/default.conf.template:ro
     env_file: 
       - .env  
     environment:
