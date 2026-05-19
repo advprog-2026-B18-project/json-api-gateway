@@ -10,7 +10,6 @@ services:
     env_file: 
       - .env  
     environment:
-      # The double $$ tells Docker Compose to safely pass the literal $ to the Nginx script
-      - NGINX_ENVSUBST_FILTER=$${PRIVATE_IP_AUTH} $${PRIVATE_IP_ORDER} $${PRIVATE_IP_PAYMENT} $${PRIVATE_IP_INVENTORY}
+      - NGINX_ENVSUBST_FILTER=^PRIVATE_IP_
 
     restart: always
