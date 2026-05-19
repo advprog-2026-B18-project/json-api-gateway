@@ -1,0 +1,18 @@
+services:
+  api-gateway:
+    image: nginx:alpine
+    container_name: api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      # Mount your template file into Nginx's automated template folder
+      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
+    environment:
+      # Explicitly pass the env variables into the container
+      - PRIVATE_IP_AUTH=${PRIVATE_IP_AUTH}
+      - PRIVATE_IP_ORDER=${PRIVATE_IP_ORDER}
+      - PRIVATE_IP_PAYMENT=${PRIVATE_IP_PAYMENT}
+      - PRIVATE_IP_INVENTORY=${PRIVATE_IP_INVENTORY}
+      # Tell Nginx to ONLY substitute these specific variables (leaving standard Nginx variables safe)
+      - NGINX_ENVSUBST_FILTER=PRIVATE_IP_AUTH PRIVATE_IP_ORDER PRIVATE_IP_PAYMENT PRIVATE_IP_INVENTORY
+    restart: always

@@ -1,0 +1,56 @@
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /var/run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access_log.log  main;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen 80;
+        server_name _; 
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # 1. Auth Service
+        location /auth/ {
+            proxy_pass http://${PRIVATE_IP_AUTH}:8082/; 
+        }
+
+        # 2. Order / Rust Axum Service
+        location /order/ {
+            proxy_pass http://${PRIVATE_IP_ORDER}:8084/; 
+        }
+
+        # 3. Payment Service
+        location /payment/ {
+            proxy_pass http://${PRIVATE_IP_PAYMENT}:8081/; 
+        }
+
+        # 4. Inventory Service
+        location /inventory/ {
+            proxy_pass http://${PRIVATE_IP_INVENTORY}:8083/; 
+        }
+
+        location /health {
+            return 200 '{"status":"UP","gateway":"nginx"}';
+            add_header Content-Type application/json;
+        }
+    }
+}
