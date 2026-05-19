@@ -1,0 +1,59 @@
+name: Deploy Nginx API Gateway
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Dynamically generate the .env file using GitHub Secrets safely
+      - name: Generate .env file
+        env:
+          AUTH_IP: ${{ secrets.PRIVATE_IP_AUTH }}
+          ORDER_IP: ${{ secrets.PRIVATE_IP_ORDER }}
+          PAYMENT_IP: ${{ secrets.PRIVATE_IP_PAYMENT }}
+          INVENTORY_IP: ${{ secrets.PRIVATE_IP_INVENTORY }}
+        run: |
+          echo "PRIVATE_IP_AUTH=$AUTH_IP" >> .env
+          echo "PRIVATE_IP_ORDER=$ORDER_IP" >> .env
+          echo "PRIVATE_IP_PAYMENT=$PAYMENT_IP" >> .env
+          echo "PRIVATE_IP_INVENTORY=$INVENTORY_IP" >> .env
+
+      # Securely copy the infrastructure files AND the newly created .env
+      - name: Copy files via scp
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          # Notice we are copying the template file, not a static conf
+          source: "docker-compose.yml,nginx.conf.template,.env"
+          target: "/home/ubuntu/"
+
+      # Connect to EC2, lock permissions, and deploy
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Pull the latest official Nginx Alpine image
+            docker pull nginx:alpine
+            
+            # Lock down the .env file so only the ubuntu user can read it
+            chmod 600 /home/ubuntu/.env
+            
+            # Restart the container. --force-recreate ensures Nginx re-reads the 
+            # .env file and regenerates the template if any private IPs changed.
+            docker compose -f /home/ubuntu/docker-compose.yml up -d --force-recreate
+            
+            # Clean up old images
+            docker image prune -af
