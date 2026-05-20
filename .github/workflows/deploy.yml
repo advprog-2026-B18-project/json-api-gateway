@@ -13,18 +13,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Dynamically generate the .env file using GitHub Secrets safely
-      - name: Generate .env file
+      # Dynamically generate the .env and prometheus.yml files using GitHub Secrets safely
+      - name: Generate Config Files
         env:
-          AUTH_IP: ${{ secrets.PRIVATE_IP_AUTH }}
-          ORDER_IP: ${{ secrets.PRIVATE_IP_ORDER }}
-          PAYMENT_IP: ${{ secrets.PRIVATE_IP_PAYMENT }}
-          INVENTORY_IP: ${{ secrets.PRIVATE_IP_INVENTORY }}
+          PRIVATE_IP_AUTH: ${{ secrets.PRIVATE_IP_AUTH }}
+          PRIVATE_IP_ORDER: ${{ secrets.PRIVATE_IP_ORDER }}
+          PRIVATE_IP_PAYMENT: ${{ secrets.PRIVATE_IP_PAYMENT }}
+          PRIVATE_IP_INVENTORY: ${{ secrets.PRIVATE_IP_INVENTORY }}
+          GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
         run: |
-          echo "PRIVATE_IP_AUTH=$AUTH_IP" >> .env
-          echo "PRIVATE_IP_ORDER=$ORDER_IP" >> .env
-          echo "PRIVATE_IP_PAYMENT=$PAYMENT_IP" >> .env
-          echo "PRIVATE_IP_INVENTORY=$INVENTORY_IP" >> .env
+          # Generate the .env file
+          echo "PRIVATE_IP_AUTH=$PRIVATE_IP_AUTH" >> .env
+          echo "PRIVATE_IP_ORDER=$PRIVATE_IP_ORDER" >> .env
+          echo "PRIVATE_IP_PAYMENT=$PRIVATE_IP_PAYMENT" >> .env
+          echo "PRIVATE_IP_INVENTORY=$PRIVATE_IP_INVENTORY" >> .env
+          echo "GF_SECURITY_ADMIN_PASSWORD=$GF_SECURITY_ADMIN_PASSWORD" >> .env
+          
+          # Generate prometheus.yml from template using envsubst
+          envsubst < prometheus.yml.template > prometheus.yml
 
       # Securely copy the infrastructure files AND the newly created .env
       - name: Copy files via scp
@@ -34,7 +40,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           # Notice we are copying the template file, not a static conf
-          source: "docker-compose.yml,default.conf.template,.env"
+          source: "docker-compose.yml,default.conf.template,.env,prometheus.yml,provisioning"
           target: "/home/ubuntu/"
 
       # Connect to EC2, lock permissions, and deploy

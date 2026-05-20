@@ -34,4 +34,15 @@ server {
         return 200 '{"status":"UP","gateway":"nginx"}';
         add_header Content-Type application/json;
     }
+
+    # Block external access to Spring Boot Actuator and internal metrics
+    location ~ ^/.*/actuator/.*$ {
+        deny all;
+        return 403;
+    }
+    
+    location ~ ^/.*/metrics$ {
+        deny all;
+        return 403;
+    }
 }
