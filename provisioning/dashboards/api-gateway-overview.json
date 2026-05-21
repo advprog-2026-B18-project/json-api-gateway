@@ -1,6 +1,5 @@
 {
   "title": "API Gateway Overview",
-  "uid": "api-gateway-overview",
   "version": 1,
   "tags": ["api-gateway", "spring-boot"],
   "timezone": "browser",
