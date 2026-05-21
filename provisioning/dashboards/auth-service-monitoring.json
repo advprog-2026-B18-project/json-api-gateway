@@ -1,0 +1,440 @@
+{
+  "title": "Auth Service Monitoring",
+  "uid": "auth-service-monitoring",
+  "version": 1,
+  "tags": ["auth-service", "spring-boot", "security"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "editable": true,
+  "refresh": "10s",
+  "panels": [
+    {
+      "title": "Uptime",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_uptime_seconds{service=\"json-auth-service\"}",
+          "legendFormat": "Uptime"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "CPU Usage",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "system_cpu_usage{service=\"json-auth-service\"}",
+          "legendFormat": "CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.7 },
+              { "color": "red", "value": 0.9 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Heap Used",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{service=\"json-auth-service\", area=\"heap\"} / jvm_memory_max_bytes{service=\"json-auth-service\", area=\"heap\"} * 100",
+          "legendFormat": "Heap"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Live Threads",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "jvm_threads_live_threads{service=\"json-auth-service\"}",
+          "legendFormat": "Threads"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 50 },
+              { "color": "red", "value": 100 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "Login Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/login\", method=\"POST\"}[1m])",
+          "legendFormat": "login"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Login Error Rate (401 vs 403)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/login\", status=~\"[45]..\"}[1m])",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Registration Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/register\", method=\"POST\"}[1m])",
+          "legendFormat": "register"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Token Refresh Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/refresh-token\", method=\"POST\"}[1m])",
+          "legendFormat": "refresh"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Token Refresh Failure Rate (401)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/refresh-token\", status=~\"[45]..\"}[1m])",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "Login 401 Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/login\", status=\"401\"}[1m])",
+          "legendFormat": "401/s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Banned Account Hit Rate (403)",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/login\", status=\"403\"}[1m])",
+          "legendFormat": "403/s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.5 },
+              { "color": "red", "value": 2 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Registration 400 Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/auth/register\", status=\"400\"}[1m])",
+          "legendFormat": "400/s"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.5 },
+              { "color": "red", "value": 2 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "KYC Submission Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=\"/profile/me/kyc\", method=\"POST\"}[1m])",
+          "legendFormat": "KYC submit"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "KYC Review Rate (Admin)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{service=\"json-auth-service\", uri=~\"/admin/kyc/.*/review\"}[1m])",
+          "legendFormat": "KYC review"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+
+    {
+      "title": "P95 Latency — Auth Endpoints",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{service=\"json-auth-service\", uri=~\"/auth/login|/auth/register|/auth/refresh-token\"}[5m]))",
+          "legendFormat": "{{uri}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 2 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "P99 Latency — Auth Endpoints",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, rate(http_server_requests_seconds_bucket{service=\"json-auth-service\", uri=~\"/auth/login|/auth/register|/auth/refresh-token\"}[5m]))",
+          "legendFormat": "{{uri}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 2 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "Heap Memory by Region",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{service=\"json-auth-service\", area=\"heap\"}",
+          "legendFormat": "{{id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Non-Heap Memory by Region",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{service=\"json-auth-service\", area=\"nonheap\"}",
+          "legendFormat": "{{id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    }
+  ]
+}
