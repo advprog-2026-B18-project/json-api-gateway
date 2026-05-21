@@ -1,47 +1,93 @@
 {
   "title": "API Gateway Overview",
+  "uid": "api-gateway-overview",
   "version": 1,
   "tags": ["api-gateway", "spring-boot"],
   "timezone": "browser",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
+  "editable": true,
+  "refresh": "15s",
   "panels": [
     {
-      "title": "HTTP Request Rate (per service)",
+      "title": "HTTP Request Rate",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus_main"
+      },
       "targets": [
         {
-          "expr": "rate(http_server_requests_seconds_count[1m])",
-          "legendFormat": "{{service}}"
+          "expr": "rate(http_server_requests_seconds_count{service=~\"$service\"}[1m])",
+          "legendFormat": "{{service}} - {{uri}}"
         }
-      ]
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "showPoints": "never"
+          }
+        }
+      }
     },
     {
       "title": "Error Rate (5xx)",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus_main"
+      },
       "targets": [
         {
-          "expr": "rate(http_server_requests_seconds_count{status=~\"5..\"}[1m])",
-          "legendFormat": "{{service}}"
+          "expr": "rate(http_server_requests_seconds_count{service=~\"$service\", status=~\"5..\"}[1m])",
+          "legendFormat": "{{service}} - {{uri}}"
         }
-      ]
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "showPoints": "never"
+          }
+        }
+      }
     },
     {
-      "title": "JVM Memory Used per Service",
+      "title": "JVM Memory Used (Heap)",
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus_main"
+      },
       "targets": [
         {
-          "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+          "expr": "sum(jvm_memory_used_bytes{service=~\"$service\", area=\"heap\"}) by (service)",
           "legendFormat": "{{service}}"
         }
-      ]
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "showPoints": "never"
+          }
+        }
+      }
     },
     {
       "title": "Uptime",
       "type": "stat",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus_main"
+      },
       "targets": [
         {
           "expr": "process_uptime_seconds{service=~\"$service\"}",
@@ -50,9 +96,38 @@
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "s"
-        }
+          "unit": "s",
+          "color": { "mode": "none" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        },
+        "overrides": []
       }
     }
-  ]
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "type": "query",
+        "query": "label_values(service)",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus_main"
+        },
+        "refresh": 1,
+        "sort": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  }
 }
