@@ -1,0 +1,424 @@
+{
+  "title": "Order Service Monitoring",
+  "uid": "order-service-monitoring",
+  "version": 1,
+  "tags": ["order-service", "rust", "axum", "business"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "editable": true,
+  "refresh": "10s",
+  "panels": [
+    {
+      "title": "Uptime",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "time() - process_start_time_seconds{service=\"json-order-service\"}",
+          "legendFormat": "Uptime"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "CPU Usage",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{service=\"json-order-service\"}[1m])",
+          "legendFormat": "CPU cores"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.7 },
+              { "color": "red", "value": 0.9 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Memory RSS",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{service=\"json-order-service\"}",
+          "legendFormat": "RSS"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 200000000 },
+              { "color": "red", "value": 500000000 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Open File Descriptors",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_open_fds{service=\"json-order-service\"}",
+          "legendFormat": "FDs"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 200 },
+              { "color": "red", "value": 400 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "Order Creation Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=\"/orders\", method=\"POST\"}[1m])",
+          "legendFormat": "create"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Payment Initiation Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/orders/.*/payment\", method=\"PATCH\"}[1m])",
+          "legendFormat": "pay"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Cancellation Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/orders/.*/cancel\", method=\"POST\"}[1m])",
+          "legendFormat": "cancel"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Order Completion Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/orders/.*/confirm\", method=\"PATCH\"}[1m])",
+          "legendFormat": "confirm"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Overall Error Rate (4xx+5xx)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", status_code=~\"[45]..\"}[1m])",
+          "legendFormat": "{{endpoint}} {{status_code}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+
+    {
+      "title": "Payment Confirmed Callback Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/internal/orders/.*/payment-confirmed\"}[1m])",
+          "legendFormat": "payment confirmed"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Refund Confirmed Callback Rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/internal/orders/.*/refund-confirmed\"}[1m])",
+          "legendFormat": "refund confirmed"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Internal Endpoint Error Rate (4xx+5xx)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", endpoint=~\"/internal/.*\", status_code=~\"[45]..\"}[1m])",
+          "legendFormat": "{{endpoint}} {{status_code}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.01 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "P99 Latency — Internal Endpoints",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{service=\"json-order-service\", endpoint=~\"/internal/.*\"}[5m]))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 },
+              { "color": "red", "value": 2 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "title": "Invalid Transition Rate (422)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{service=\"json-order-service\", status_code=\"422\"}[1m])",
+          "legendFormat": "{{endpoint}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.05 },
+              { "color": "red", "value": 0.2 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "P95 Latency — Order Write Endpoints",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service=\"json-order-service\", endpoint=~\"/orders/.*\", method=~\"POST|PATCH\"}[5m]))",
+          "legendFormat": "{{endpoint}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+
+    {
+      "title": "Memory RSS Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 46 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{service=\"json-order-service\"}",
+          "legendFormat": "RSS"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 200000000 },
+              { "color": "red", "value": 500000000 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Virtual Memory",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 46 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_virtual_memory_bytes{service=\"json-order-service\"}",
+          "legendFormat": "Virtual"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      }
+    },
+    {
+      "title": "Open File Descriptors Over Time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 46 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "process_open_fds{service=\"json-order-service\"}",
+          "legendFormat": "FDs"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 200 },
+              { "color": "red", "value": 400 }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

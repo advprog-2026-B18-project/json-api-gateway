@@ -10,8 +10,9 @@ scrape_configs:
         - '${PRIVATE_IP_AUTH}:8082'
         - '${PRIVATE_IP_INVENTORY}:8083'
 
-  - job_name: 'rust_order_service'
-    metrics_path: '/metrics'
+  - job_name: 'json-order-service'
     static_configs:
-      - targets:
-        - '${PRIVATE_IP_ORDER}:8084'
+        - targets: ['order-service:8084']
+          labels:
+            service: 'json-order-service'
+    metrics_path: '/metrics'
