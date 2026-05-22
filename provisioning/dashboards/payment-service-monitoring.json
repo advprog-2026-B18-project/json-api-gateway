@@ -9,9 +9,42 @@
   "refresh": "10s",
   "panels": [
     {
+      "title": "CPU Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "system_cpu_usage{service=\"json-payment-service\"}",
+          "legendFormat": "CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 3,
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "min"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
       "title": "Uptime",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 3, "x": 0, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 0, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -35,7 +68,7 @@
     {
       "title": "CPU Usage",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 3, "x": 3, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 3, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -61,7 +94,7 @@
     {
       "title": "Heap Used",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 3, "x": 6, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 6, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -87,7 +120,7 @@
     {
       "title": "Live Threads",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 3, "x": 9, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 9, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -113,7 +146,7 @@
     {
       "title": "Open File Descriptors",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 3, "x": 12, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 12, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -139,7 +172,7 @@
     {
       "title": "Disk Usage",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 3, "x": 15, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 15, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -165,7 +198,7 @@
     {
       "title": "409 Idempotency Collision Rate",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 3, "x": 18, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 18, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -191,7 +224,7 @@
     {
       "title": "Active HikariCP Connections",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 3, "x": 21, "y": 0 },
+      "gridPos": { "h": 6, "w": 3, "x": 21, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -218,7 +251,7 @@
     {
       "title": "HTTP Request Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -237,7 +270,7 @@
     {
       "title": "Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -264,7 +297,7 @@
     {
       "title": "Latency P95",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -292,7 +325,7 @@
     {
       "title": "Heap Memory by Region",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -311,7 +344,7 @@
     {
       "title": "Non-Heap Memory by Region",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -330,7 +363,7 @@
     {
       "title": "HikariCP Connection Pool",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -358,7 +391,7 @@
     {
       "title": "Transaction Error Rate by Endpoint (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -385,7 +418,7 @@
     {
       "title": "422 Insufficient Balance Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 22 },
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -412,7 +445,7 @@
     {
       "title": "P95 Latency — Money Endpoints (POST)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 22 },
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -440,7 +473,7 @@
     {
       "title": "Internal Endpoint Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -467,7 +500,7 @@
     {
       "title": "Internal Endpoint Latency P99",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {

@@ -9,9 +9,42 @@
   "refresh": "10s",
   "panels": [
     {
+      "title": "CPU Usage",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus_main" },
+      "targets": [
+        {
+          "expr": "system_cpu_usage{service=\"json-inventory-service\"}",
+          "legendFormat": "CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 3,
+          "color": { "mode": "palette-classic" },
+          "custom": { "showPoints": "never" }
+        }
+      },
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "min"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      }
+    },
+    {
       "title": "Uptime",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -35,7 +68,7 @@
     {
       "title": "CPU Usage",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -61,7 +94,7 @@
     {
       "title": "Heap Used",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -87,7 +120,7 @@
     {
       "title": "Live Threads",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -114,7 +147,7 @@
     {
       "title": "Public Product Search Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 6 },
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -133,7 +166,7 @@
     {
       "title": "Product Detail Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 6 },
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -152,7 +185,7 @@
     {
       "title": "Public Endpoint Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 6 },
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -179,7 +212,7 @@
     {
       "title": "P95 Latency — Public Endpoints",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 6 },
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -207,7 +240,7 @@
     {
       "title": "Reserve Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -226,7 +259,7 @@
     {
       "title": "Reserve Error Rate (400)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -253,7 +286,7 @@
     {
       "title": "Release Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -272,7 +305,7 @@
     {
       "title": "Post-Order Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -299,7 +332,7 @@
     {
       "title": "P99 Latency — Internal Endpoints",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -327,7 +360,7 @@
     {
       "title": "Product Create Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 30 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -346,7 +379,7 @@
     {
       "title": "Product Update/Delete Error Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 30 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -373,7 +406,7 @@
     {
       "title": "Admin Moderation Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 30 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -393,7 +426,7 @@
     {
       "title": "Heap Memory by Region",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -412,7 +445,7 @@
     {
       "title": "Non-Heap Memory by Region",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {

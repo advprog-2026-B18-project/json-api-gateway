@@ -11,7 +11,7 @@
     {
       "title": "Uptime",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -35,7 +35,7 @@
     {
       "title": "Memory RSS",
       "type": "gauge",
-      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -61,7 +61,7 @@
     {
       "title": "Open File Descriptors",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 8 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -88,7 +88,7 @@
     {
       "title": "Order Creation Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -107,7 +107,7 @@
     {
       "title": "Payment Initiation Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -126,7 +126,7 @@
     {
       "title": "Cancellation Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 6 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -145,7 +145,7 @@
     {
       "title": "Order Completion Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -164,7 +164,7 @@
     {
       "title": "Overall Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -184,7 +184,7 @@
     {
       "title": "Payment Confirmed Callback Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -203,7 +203,7 @@
     {
       "title": "Refund Confirmed Callback Rate",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -222,7 +222,7 @@
     {
       "title": "Internal Endpoint Error Rate (4xx+5xx)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -249,7 +249,7 @@
     {
       "title": "P99 Latency — Internal Endpoints",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 30 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -277,7 +277,7 @@
     {
       "title": "Invalid Transition Rate (422)",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -304,7 +304,7 @@
     {
       "title": "P95 Latency — Order Write Endpoints",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -324,7 +324,7 @@
     {
       "title": "Memory RSS Over Time",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 46 },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 54 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -351,7 +351,7 @@
     {
       "title": "Virtual Memory",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 46 },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 54 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -370,7 +370,7 @@
     {
       "title": "Open File Descriptors Over Time",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 46 },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 54 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -397,7 +397,7 @@
     {
       "title": "CPU Usage",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 54 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
       "datasource": { "type": "prometheus", "uid": "prometheus_main" },
       "targets": [
         {
@@ -408,6 +408,8 @@
       "fieldConfig": {
         "defaults": {
           "unit": "percentunit",
+          "min": 0,
+          "max": 3,
           "color": { "mode": "palette-classic" },
           "custom": { "showPoints": "never" }
         }
